@@ -1,24 +1,16 @@
 import { get, update } from "@reshuffle/db";
-import { useSession } from '@reshuffle/server-function';
-
-function assertSession() {
-  const session = useSession();
-  if (session === undefined) {
-    throw new Error('Login needed');
-  }
-  return session;
-}
+import { getCurrentUser } from '@reshuffle/server-function';
 
 /* @expose */
 export async function addNewTodo(todo = {}) {
-  const { id } = assertSession();
+  const { id } = getCurrentUser(true);
   // what you will return here will be directly updated in backend and returned in frontend
   return update(`/todos/${id}`, (todos = []) => todos.concat(todo));
 }
 
 /* @expose */
 export async function getTodoList() {
-  const { id } = assertSession();
+  const { id } = getCurrentUser(true);
   // get all todolist
   return get(`/todos/${id}`);
 }
@@ -28,7 +20,7 @@ export async function getTodoList() {
  */
 /* @expose */
 export async function deleteTodoById(todoId) {
-  const { id } = assertSession();
+  const { id } = getCurrentUser(true);
   // what you will return here will be directly updated in backend and returned in frontend
   return update(`/todos/${id}`, (todos = []) => todos.filter((todo) => todo.id !== todoId));
 }

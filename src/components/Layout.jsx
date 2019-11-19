@@ -1,11 +1,17 @@
 import '@reshuffle/code-transform/macro';
 import React from 'react';
-import { useAuth, useAuthFlow } from '@reshuffle/react-auth';
+import { useAuth } from '@reshuffle/react-auth';
 import TodoList from "./TodoList";
 
 export default function Main() {
-  const { loading, error, authenticated, profile } = useAuth();
-  const { getLoginURL, getLogoutURL } = useAuthFlow();
+  const {
+    loading,
+    error,
+    authenticated,
+    profile,
+    getLoginURL,
+    getLogoutURL,
+  } = useAuth();
 
   if (loading) {
     return <div><h2>Loading...</h2></div>;
