@@ -1,9 +1,13 @@
 import React from "react";
-import TodoList from "./components/TodoList";
-import "./styles/todo.scss";
+import { AuthProvider } from '@reshuffle/react-auth';
+import Layout from './components/Layout';
 
 const App = () => {
-  return <TodoList />;
+  return (
+    <AuthProvider>
+      <Layout />
+    </AuthProvider>
+  );
 };
 
 export default App;

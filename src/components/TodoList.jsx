@@ -1,6 +1,7 @@
+import "@reshuffle/code-transform/macro";
 import React, { Component } from "react";
 import { TextField, Button } from "@material-ui/core";
-import "@reshuffle/code-transform/macro";
+import "./styles/todo.scss";
 import { addNewTodo, getTodoList, deleteTodoById } from "../../backend/todo";
 
 class TodoList extends Component {

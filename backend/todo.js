@@ -1,38 +1,34 @@
-import { get, create, remove, update } from "@reshuffle/db";
+import { get, update } from "@reshuffle/db";
+import { useSession } from '@reshuffle/server-function';
+
+function assertSession() {
+  const session = useSession();
+  if (session === undefined) {
+    throw new Error('Login needed');
+  }
+  return session;
+}
 
 /* @expose */
 export async function addNewTodo(todo = {}) {
-  // check if a todolist exists.
-  return getTodoList().then(list => {
-    if (list) {
-      // if exists then update list with new todo
-      return update("todos", todolist => todolist.concat(todo));
-    } else {
-      // if doesn't exist then create new todo array
-      return create("todos", [todo]).then(() => getTodoList());
-    }
-  });
+  const { id } = assertSession();
+  // what you will return here will be directly updated in backend and returned in frontend
+  return update(`/todos/${id}`, (todos = []) => todos.concat(todo));
 }
 
 /* @expose */
 export async function getTodoList() {
+  const { id } = assertSession();
   // get all todolist
-  return get("todos");
+  return get(`/todos/${id}`);
 }
 
+/**
+ * Delete a specific todo item
+ */
 /* @expose */
-export async function deleteTodoById(id) {
-  // delete specific todo
-  return update("todos", (todolist = []) =>
-    // what you will return here will be directly updated in backend and returned in frontend
-    todolist.filter(todo => todo.id !== id)
-  );
-}
-
-/* @expose */
-export async function deleteTodo() {
-  // delete all todo
-  return remove(`todos`).then(condition => {
-    return getTodoList();
-  });
+export async function deleteTodoById(todoId) {
+  const { id } = assertSession();
+  // what you will return here will be directly updated in backend and returned in frontend
+  return update(`/todos/${id}`, (todos = []) => todos.filter((todo) => todo.id !== todoId));
 }
